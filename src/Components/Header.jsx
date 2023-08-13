@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
 import logo from './../assets//Images/logo.png'
+import { auth , provider } from '../config/firebase'
+import { signInWithPopup, signOut } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+
+
+
 import {HiHome,
 HiMagnifyingGlass,
 HiStar,
@@ -10,6 +17,22 @@ import HeaderItem from './HeaderItem';
 
 
 function Header() {
+
+
+  const signUserOut = async () => {
+      await signOut(auth);
+  }
+
+  const [user] = useAuthState(auth);
+
+
+  const signInWithGoogle = async () => {
+ const result = await signInWithPopup(auth, provider)
+ console.log(result);
+  }
+
+  
+
     const [toggle,setToggle]=useState(false);
     const menu=[
         {
@@ -62,8 +85,14 @@ function Header() {
   </div>
   </div>
   </div>
-  <img src="https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-  className='w-[40px] rounded-full'/>
+  <button onClick={signInWithGoogle} className='text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2 ml-[100px] '> Sign In With Google </button>
+  
+  <div> 
+  <img onClick={signInWithGoogle} className='w-[40px] rounded-full mr-5 ml-10 cursor-pointer' src= {user?.photoURL}/>
+    <p> {user?.displayName}</p>
+    <button onClick={signUserOut} className='text-white bg-[#4285F4] hover:bg-[#4285F4]/90 focus:ring-4 focus:ring-[#4285F4]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-[#4285F4]/55 mr-2 mb-2 ml-[20px] my-[2px]'> Log Out </button>
+   
+  </div>
     
     
     </div>
